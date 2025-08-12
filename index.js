@@ -33,6 +33,8 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use(express.static(path.join(__dirname, "api-page")))
+
 const requestCounts = new Map()
 const RATE_LIMIT_WINDOW = 1 * 60 * 1000
 const RATE_LIMIT_MAX = 15
@@ -71,7 +73,15 @@ app.use((req, res, next) => {
   try {
     const settings = JSON.parse(fs.readFileSync(settingsPath, "utf-8"))
 
-    const skipPaths = ["/api/settings", "/assets/", "/src/", "/api/preview-image", "/api-page/sponsor.json", "/support"]
+    const skipPaths = [
+      "/api/settings",
+      "/styles.css",
+      "/script.js",
+      "/src/",
+      "/api/preview-image",
+      "/api-page/sponsor.json",
+      "/support",
+    ]
     const shouldSkip = skipPaths.some((path) => req.path.startsWith(path))
 
     if (settings.maintenance && settings.maintenance.enabled && !shouldSkip) {
@@ -93,16 +103,6 @@ app.use((req, res, next) => {
     console.error("Error checking maintenance mode:", error)
     next()
   }
-})
-
-app.get("/assets/styles.css", (req, res) => {
-  res.setHeader("Content-Type", "text/css")
-  res.sendFile(path.join(__dirname, "api-page", "styles.css"))
-})
-
-app.get("/assets/script.js", (req, res) => {
-  res.setHeader("Content-Type", "application/javascript")
-  res.sendFile(path.join(__dirname, "api-page", "script.js"))
 })
 
 app.get("/api-page/sponsor.json", (req, res) => {
