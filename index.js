@@ -5,6 +5,7 @@ import cors from "cors"
 import path from "path"
 import { fileURLToPath, pathToFileURL } from "url"
 import { createRequire } from "module"
+import { logRequest } from "./src/utils/logger.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -19,6 +20,10 @@ app.set("json spaces", 2)
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cors())
+app.use((req, res, next) => {
+  logRequest(req)
+  next()
+})
 
 app.use((req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff")
@@ -248,6 +253,22 @@ await loadApiRoutes()
 
 console.log(chalk.bgHex("#90EE90").hex("#333").bold(" Load Complete! ✓ "))
 console.log(chalk.bgHex("#90EE90").hex("#333").bold(` Total Routes Loaded: ${totalRoutes} `))
+
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(__dirname, "api-page", "login.html"))
+})
+
+app.get("/register", (req, res) => {
+  res.sendFile(path.join(__dirname, "api-page", "register.html"))
+})
+
+app.get("/dashboard", (req, res) => {
+  res.sendFile(path.join(__dirname, "api-page", "dashboard.html"))
+})
+
+app.get("/admin", (req, res) => {
+  res.sendFile(path.join(__dirname, "api-page", "admin.html"))
+})
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "api-page", "index.html"))
