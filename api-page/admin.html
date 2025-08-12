@@ -17,6 +17,17 @@
     <ul id="logs"></ul>
     <button id="logout" class="btn btn-primary">Logout</button>
   </div>
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <h1>Admin Dashboard</h1>
+  <div id="stats"></div>
+  <h2>Users</h2>
+  <table id="users"></table>
+  <h2>Logs</h2>
+  <ul id="logs"></ul>
+  <button id="logout">Logout</button>
   <script>
     const token = localStorage.getItem('token');
     if (!token) {
@@ -39,6 +50,9 @@
       usersData.users.forEach(u => {
         const tr = document.createElement('tr');
         tr.innerHTML = `<td>${u.username}</td><td>${u.role}</td><td class="suspended">${u.suspended}</td><td><button class="btn btn-primary btn-sm" data-user="${u.username}" data-suspended="${u.suspended}">${u.suspended ? 'Unsuspend' : 'Suspend'}</button></td>`;
+
+        tr.innerHTML = `<td>${u.username}</td><td>${u.role}</td><td class="suspended">${u.suspended}</td><td><button data-user="${u.username}" data-suspended="${u.suspended}">${u.suspended ? 'Unsuspend' : 'Suspend'}</button></td>`;
+
         table.appendChild(tr);
       });
       table.addEventListener('click', async (e) => {

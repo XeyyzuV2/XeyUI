@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -13,6 +14,15 @@
     <p id="welcome"></p>
     <button id="logout" class="btn btn-primary">Logout</button>
   </div>
+
+  <title>User Dashboard</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <h1>User Dashboard</h1>
+  <p id="welcome"></p>
+  <button id="logout">Logout</button>
+
   <script>
     const token = localStorage.getItem('token');
     if (!token) {
