@@ -254,6 +254,22 @@ await loadApiRoutes()
 console.log(chalk.bgHex("#90EE90").hex("#333").bold(" Load Complete! ✓ "))
 console.log(chalk.bgHex("#90EE90").hex("#333").bold(` Total Routes Loaded: ${totalRoutes} `))
 
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(__dirname, "api-page", "login.html"))
+})
+
+app.get("/register", (req, res) => {
+  res.sendFile(path.join(__dirname, "api-page", "register.html"))
+})
+
+app.get("/dashboard", (req, res) => {
+  res.sendFile(path.join(__dirname, "api-page", "dashboard.html"))
+})
+
+app.get("/admin", (req, res) => {
+  res.sendFile(path.join(__dirname, "api-page", "admin.html"))
+})
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "api-page", "index.html"))
 })

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <h1>Admin Dashboard</h1>
+  <div id="stats"></div>
+  <h2>Users</h2>
+  <table id="users"></table>
+  <h2>Logs</h2>
+  <ul id="logs"></ul>
+  <button id="logout">Logout</button>
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/login';
+    }
+    async function load() {
+      const headers = { Authorization: 'Bearer ' + token };
+      const statsRes = await fetch('/api/admin/stats', { headers });
+      if (!statsRes.ok) {
+        window.location.href = '/dashboard';
+        return;
+      }
+      const statsData = await statsRes.json();
+      const s = statsData.stats;
+      document.getElementById('stats').textContent = `Total Users: ${s.totalUsers} | Suspended: ${s.suspendedUsers} | Total Requests: ${s.totalRequests}`;
+      const usersRes = await fetch('/api/admin/users', { headers });
+      const usersData = await usersRes.json();
+      const table = document.getElementById('users');
+      table.innerHTML = '<tr><th>Username</th><th>Role</th><th>Suspended</th><th>Action</th></tr>';
+      usersData.users.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${u.username}</td><td>${u.role}</td><td class="suspended">${u.suspended}</td><td><button data-user="${u.username}" data-suspended="${u.suspended}">${u.suspended ? 'Unsuspend' : 'Suspend'}</button></td>`;
+        table.appendChild(tr);
+      });
+      table.addEventListener('click', async (e) => {
+        if (e.target.tagName === 'BUTTON') {
+          const username = e.target.getAttribute('data-user');
+          const suspended = e.target.getAttribute('data-suspended') === 'true';
+          const res = await fetch(`/api/admin/users/${username}/suspend`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+            body: JSON.stringify({ suspended: !suspended })
+          });
+          if (res.ok) {
+            e.target.textContent = suspended ? 'Suspend' : 'Unsuspend';
+            e.target.setAttribute('data-suspended', (!suspended).toString());
+            e.target.closest('tr').querySelector('.suspended').textContent = (!suspended).toString();
+          }
+        }
+      });
+      const logsRes = await fetch('/api/admin/logs', { headers });
+      const logsData = await logsRes.json();
+      const logUl = document.getElementById('logs');
+      logsData.logs.forEach(l => {
+        const li = document.createElement('li');
+        li.textContent = l;
+        logUl.appendChild(li);
+      });
+    }
+    document.getElementById('logout').addEventListener('click', () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      window.location.href = '/login';
+    });
+    load();
+  </script>
+</body>
+</html>

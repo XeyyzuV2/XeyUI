@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Dashboard</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <h1>User Dashboard</h1>
+  <p id="welcome"></p>
+  <button id="logout">Logout</button>
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/login';
+    }
+    const username = localStorage.getItem('username');
+    document.getElementById('welcome').textContent = `Welcome, ${username}`;
+    document.getElementById('logout').addEventListener('click', () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      window.location.href = '/login';
+    });
+  </script>
+</body>
+</html>
