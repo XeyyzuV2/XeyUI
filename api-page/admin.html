@@ -2,6 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dashboard-container">
+  <div class="dashboard-card">
+    <h1 class="gradient-text">Admin Dashboard</h1>
+    <div id="stats" class="stats"></div>
+    <h2>Users</h2>
+    <table id="users"></table>
+    <h2>Logs</h2>
+    <ul id="logs"></ul>
+    <button id="logout" class="btn btn-primary">Logout</button>
+  </div>
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="/assets/styles.css">
 </head>
@@ -34,7 +49,10 @@
       table.innerHTML = '<tr><th>Username</th><th>Role</th><th>Suspended</th><th>Action</th></tr>';
       usersData.users.forEach(u => {
         const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${u.username}</td><td>${u.role}</td><td class="suspended">${u.suspended}</td><td><button class="btn btn-primary btn-sm" data-user="${u.username}" data-suspended="${u.suspended}">${u.suspended ? 'Unsuspend' : 'Suspend'}</button></td>`;
+
         tr.innerHTML = `<td>${u.username}</td><td>${u.role}</td><td class="suspended">${u.suspended}</td><td><button data-user="${u.username}" data-suspended="${u.suspended}">${u.suspended ? 'Unsuspend' : 'Suspend'}</button></td>`;
+
         table.appendChild(tr);
       });
       table.addEventListener('click', async (e) => {
