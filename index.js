@@ -5,6 +5,7 @@ import cors from "cors"
 import path from "path"
 import { fileURLToPath, pathToFileURL } from "url"
 import { createRequire } from "module"
+import { logRequest } from "./src/utils/logger.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -19,6 +20,10 @@ app.set("json spaces", 2)
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cors())
+app.use((req, res, next) => {
+  logRequest(req)
+  next()
+})
 
 app.use((req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff")
@@ -27,6 +32,8 @@ app.use((req, res, next) => {
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin")
   next()
 })
+
+app.use(express.static(path.join(__dirname, "api-page")))
 
 const requestCounts = new Map()
 const RATE_LIMIT_WINDOW = 1 * 60 * 1000
@@ -66,7 +73,15 @@ app.use((req, res, next) => {
   try {
     const settings = JSON.parse(fs.readFileSync(settingsPath, "utf-8"))
 
-    const skipPaths = ["/api/settings", "/assets/", "/src/", "/api/preview-image", "/api-page/sponsor.json", "/support"]
+    const skipPaths = [
+      "/api/settings",
+      "/styles.css",
+      "/script.js",
+      "/src/",
+      "/api/preview-image",
+      "/api-page/sponsor.json",
+      "/support",
+    ]
     const shouldSkip = skipPaths.some((path) => req.path.startsWith(path))
 
     if (settings.maintenance && settings.maintenance.enabled && !shouldSkip) {
@@ -88,16 +103,6 @@ app.use((req, res, next) => {
     console.error("Error checking maintenance mode:", error)
     next()
   }
-})
-
-app.get("/assets/styles.css", (req, res) => {
-  res.setHeader("Content-Type", "text/css")
-  res.sendFile(path.join(__dirname, "api-page", "styles.css"))
-})
-
-app.get("/assets/script.js", (req, res) => {
-  res.setHeader("Content-Type", "application/javascript")
-  res.sendFile(path.join(__dirname, "api-page", "script.js"))
 })
 
 app.get("/api-page/sponsor.json", (req, res) => {
@@ -248,6 +253,22 @@ await loadApiRoutes()
 
 console.log(chalk.bgHex("#90EE90").hex("#333").bold(" Load Complete! ✓ "))
 console.log(chalk.bgHex("#90EE90").hex("#333").bold(` Total Routes Loaded: ${totalRoutes} `))
+
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(__dirname, "api-page", "login.html"))
+})
+
+app.get("/register", (req, res) => {
+  res.sendFile(path.join(__dirname, "api-page", "register.html"))
+})
+
+app.get("/dashboard", (req, res) => {
+  res.sendFile(path.join(__dirname, "api-page", "dashboard.html"))
+})
+
+app.get("/admin", (req, res) => {
+  res.sendFile(path.join(__dirname, "api-page", "admin.html"))
+})
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "api-page", "index.html"))

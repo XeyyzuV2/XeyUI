@@ -2524,3 +2524,105 @@ input:checked + .slider:before {
   box-shadow: var(--hover-shadow);
   color: white;
 }
+
+/* Authentication and Dashboard Pages */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background-color);
+  padding: var(--space-xxl) var(--space-lg);
+}
+
+.auth-card {
+  background: var(--card-background);
+  padding: var(--space-xl);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--card-shadow);
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.auth-card input {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+}
+
+.auth-card button {
+  width: 100%;
+}
+
+.error-text {
+  color: var(--error-color);
+  margin-top: var(--space-sm);
+  text-align: center;
+}
+
+.switch-link {
+  margin-top: var(--space-md);
+  text-align: center;
+}
+
+.dashboard-container {
+  min-height: 100vh;
+  background: var(--background-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xxl) var(--space-lg);
+}
+
+.dashboard-card {
+  background: var(--card-background);
+  padding: var(--space-xl);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--card-shadow);
+  width: 100%;
+  max-width: 800px;
+}
+
+.dashboard-card h1 {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+
+.dashboard-card table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--space-lg);
+}
+
+.dashboard-card th,
+.dashboard-card td {
+  padding: var(--space-sm);
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+}
+
+.dashboard-card th {
+  background: var(--highlight-color);
+}
+
+.dashboard-card ul {
+  list-style: disc inside;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: var(--space-lg);
+}
+
+.dashboard-card .stats {
+  margin-bottom: var(--space-lg);
+}
+
+.btn-sm {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.875rem;
+}
